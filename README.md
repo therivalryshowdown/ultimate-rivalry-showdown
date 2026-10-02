@@ -1,57 +1,186 @@
-# Rivalry Showdown
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin - Rivalry Showdown</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: 'Segoe UI', sans-serif;
+        background: linear-gradient(135deg, #f8fbff, #eefbf4);
+        color: #2f3542;
+        padding: 28px;
+      }
+      .container {
+        max-width: 760px;
+        margin: 0 auto;
+      }
+      .card {
+        background: white;
+        border-radius: 18px;
+        padding: 24px;
+        box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+      }
+      h1 { margin-top: 0; }
+      .notice {
+        background: #fff3cd;
+        border: 1px solid #ffe69c;
+        color: #7a4d00;
+        padding: 12px 14px;
+        border-radius: 10px;
+        margin-bottom: 18px;
+        display: none;
+      }
+      .notice.show { display: block; }
+      .admin-form {
+        display: flex;
+        gap: 12px;
+        margin-top: 18px;
+        margin-bottom: 18px;
+      }
+      input, button {
+        font: inherit;
+      }
+      input {
+        flex: 1;
+        padding: 12px 14px;
+        border: 1px solid #dfe4ea;
+        border-radius: 10px;
+      }
+      button {
+        background: linear-gradient(180deg, #2ed573, #1ebf60);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        padding: 12px 18px;
+        font-weight: 700;
+        cursor: pointer;
+      }
+      .category-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+      .category-list li {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        padding: 10px 12px;
+        border-radius: 10px;
+        margin-bottom: 10px;
+      }
+      .link {
+        display: inline-block;
+        margin-top: 16px;
+        color: #1e90ff;
+        text-decoration: none;
+        font-weight: 600;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="card">
+        <h1>Admin Panel</h1>
+        <div class="notice" id="notice"></div>
+        <div id="access-denied" style="display:none;">
+          <p>Access denied. Use the correct admin link.</p>
+          <a class="link" href="index.html">Go back to the site</a>
+        </div>
 
-This version is upgraded to use a shared database so other users can see the same polls and vote counts.
+        <div id="admin-panel" style="display:none;">
+          <form id="category-form">
+            <div class="admin-form">
+              <input type="text" id="category-name" placeholder="Add a new category" required />
+              <button type="submit">Add Category</button>
+            </div>
+          </form>
 
-## What you need to do
+          <h3>Current Categories</h3>
+          <ul class="category-list" id="category-list"></ul>
+          <a class="link" href="index.html">Back to rivalry site</a>
+        </div>
+      </div>
+    </div>
 
-1. Create a free Supabase project at https://supabase.com
-2. Open your project SQL editor
-3. Run this SQL:
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config.js"></script>
+    <script>
+      const notice = document.getElementById('notice');
+      const accessDenied = document.getElementById('access-denied');
+      const adminPanel = document.getElementById('admin-panel');
+      const categoryList = document.getElementById('category-list');
+      const categoryForm = document.getElementById('category-form');
+      const categoryNameInput = document.getElementById('category-name');
 
-```sql
-create extension if not exists pgcrypto;
+      const supabaseUrl = window.__SUPABASE_URL__;
+      const supabaseKey = window.__SUPABASE_ANON_KEY__;
+      const adminKey = window.__ADMIN_KEY__;
+      const supabase = supabaseUrl && supabaseKey ? window.supabase.createClient(supabaseUrl, supabaseKey) : null;
 
-create table if not exists polls (
-  id text primary key,
-  category text not null,
-  option_a text not null,
-  option_b text not null,
-  votes_a integer not null default 0,
-  votes_b integer not null default 0,
-  created_at timestamptz not null default now()
-);
+      function showNotice(message) {
+        notice.textContent = message;
+        notice.classList.add('show');
+      }
 
-create table if not exists poll_votes (
-  id uuid primary key default gen_random_uuid(),
-  poll_id text not null references polls(id) on delete cascade,
-  voter_key text not null,
-  choice text not null check (choice in ('A', 'B')),
-  created_at timestamptz not null default now(),
-  unique (poll_id, voter_key)
-);
+      const params = new URLSearchParams(window.location.search);
+      const passedKey = params.get('key');
 
-alter table polls enable row level security;
-alter table poll_votes enable row level security;
+      if (!adminKey || passedKey !== adminKey) {
+        accessDenied.style.display = 'block';
+        return;
+      }
 
-create policy "Public can read polls" on polls for select using (true);
-create policy "Public can insert polls" on polls for insert with check (true);
-create policy "Public can update polls" on polls for update using (true) with check (true);
+      adminPanel.style.display = 'block';
 
-create policy "Public can read votes" on poll_votes for select using (true);
-create policy "Public can insert votes" on poll_votes for insert with check (true);
-```
+      async function loadCategories() {
+        if (!supabase) {
+          showNotice('Supabase is not connected.');
+          return;
+        }
 
-4. In `config.js`, replace the placeholder values with your Supabase URL and anon key.
-5. Upload the repo to GitHub Pages or another static host.
+        const { data, error } = await supabase
+          .from('categories')
+          .select('name')
+          .order('name', { ascending: true });
 
-## Notes
+        if (error) {
+          showNotice('Could not load categories: ' + error.message);
+          return;
+        }
 
-- The app now uses a shared database, so all users can see the same results.
-- Each browser keeps a local voter key so users only vote once per poll.
-- GitHub Pages can host the frontend; Supabase stores the real data.
+        categoryList.innerHTML = '';
+        (data || []).forEach((item) => {
+          const li = document.createElement('li');
+          li.textContent = item.name;
+          categoryList.appendChild(li);
+        });
+      }
 
-## Live URL
+      categoryForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
 
-After hosting, your site will be available as a GitHub Pages site, like:
+        if (!supabase) {
+          showNotice('Supabase is not connected.');
+          return;
+        }
 
-https://YOUR_USERNAME.github.io/ultimate-rivalry-showdown
+        const name = categoryNameInput.value.trim();
+        if (!name) return;
+
+        const { error } = await supabase.from('categories').insert({ name });
+
+        if (error) {
+          showNotice('Could not add category: ' + error.message);
+          return;
+        }
+
+        categoryNameInput.value = '';
+        showNotice('Category added successfully.');
+        await loadCategories();
+      });
+
+      loadCategories();
+    </script>
+  </body>
+</html>
