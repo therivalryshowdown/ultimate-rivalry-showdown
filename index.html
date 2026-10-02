@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ultimate Rivalry Showdown - Vote Now!</title>
+    <style>
+        :root {
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+            --primary-color: #ff4757;
+            --secondary-color: #2ed573;
+            --text-color: #2f3542;
+            --subtext-color: #747d8c;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7ff, #eefbf4);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            font-size: clamp(2.2rem, 4vw, 3.3rem);
+            color: var(--primary-color);
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        header p {
+            color: var(--subtext-color);
+            font-size: 1.1rem;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 980px;
+            margin: 0 auto;
+        }
+
+        .category-title {
+            font-size: 1.6rem;
+            margin-top: 32px;
+            margin-bottom: 16px;
+            border-bottom: 2px solid #dfe4ea;
+            padding-bottom: 8px;
+            color: #465063;
+        }
+
+        .poll-card {
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            padding: 22px 20px 18px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+        }
+
+        .poll-header {
+            text-align: center;
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 18px;
+            color: #1f2937;
+        }
+
+        .poll-options {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 18px;
+        }
+
+        .option-btn {
+            flex: 1;
+            padding: 16px 14px;
+            border: 2px solid #f0c95f;
+            border-radius: 12px;
+            background: linear-gradient(180deg, #ffffff, #fffaf0);
+            font-size: 1.05rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            background: linear-gradient(180deg, #ff7f50, #ff4757);
+            color: white;
+            border-color: #ff4757;
+            transform: translateY(-1px);
+        }
+
+        .option-btn:disabled {
+            cursor: not-allowed;
+            opacity: 0.9;
+        }
+
+        .vs-badge {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            background: #fff1f2;
+            color: var(--primary-color);
+            font-weight: 800;
+            font-size: 0.95rem;
+            box-shadow: inset 0 0 0 2px #ffd8dc;
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 24px;
+            background-color: #edf2f7;
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            margin-bottom: 12px;
+            border: 1px solid #e1e8f0;
+        }
+
+        .progress-bar-a {
+            height: 100%;
+            background: linear-gradient(90deg, #ff4757, #ff6b6b);
+            transition: width 0.5s ease-in-out;
+        }
+
+        .progress-bar-b {
+            height: 100%;
+            background: linear-gradient(90deg, #1e90ff, #4dabff);
+            transition: width 0.5s ease-in-out;
+        }
+
+        .poll-footer {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            font-size: 0.9rem;
+            color: var(--subtext-color);
+            flex-wrap: wrap;
+        }
+
+        .add-poll-section {
+            background: #fff;
+            padding: 22px 20px;
+            border-radius: 16px;
+            margin-top: 42px;
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+        }
+
+        .add-poll-section h3 {
+            margin: 0 0 18px;
+            font-size: 1.3rem;
+            color: #1f2937;
+        }
+
+        .form-group {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid #dfe4ea;
+            border-radius: 10px;
+            font-size: 1rem;
+            background: #fff;
+        }
+
+        .add-btn {
+            padding: 12px 20px;
+            background: linear-gradient(180deg, #2ed573, #20bf68);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: opacity 0.2s ease;
+        }
+
+        .add-btn:hover {
+            opacity: 0.95;
+        }
+
+        @media (max-width: 700px) {
+            .poll-options {
+                flex-direction: column;
+            }
+
+            .vs-badge {
+                width: 46px;
+                height: 46px;
+            }
+
+            .form-group {
+                flex-direction: column;
+            }
+
+            .poll-footer {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>⚡ Rivalry Showdown</h1>
+        <p>Vote for your favorites and see who reigns supreme!</p>
+    </header>
+
+    <div class="container" id="polls-container"></div>
+
+    <div class="container">
+        <div class="add-poll-section">
+            <h3>Create Your Own Rivalry Poll</h3>
+            <form id="create-poll-form">
+                <div class="form-group">
+                    <select id="poll-category" required>
+                        <option value="Indian Culinary Cuisine">Indian Culinary Cuisine</option>
+                        <option value="Sports Legends">Sports Legends</option>
+                        <option value="Pop Culture & Others">Pop Culture & Others</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <input type="text" id="option-a-input" placeholder="Option A (e.g. Samosa)" required>
+                    <input type="text" id="option-b-input" placeholder="Option B (e.g. Pani Puri)" required>
+                </div>
+                <button type="submit" class="add-btn">Create Poll</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const initialPolls = [
+            {
+                id: "p1",
+                category: "Indian Culinary Cuisine",
+                optionA: "Pani Puri",
+                optionB: "Samosa",
+                votesA: 120,
+                votesB: 95
+            },
+            {
+                id: "p2",
+                category: "Indian Culinary Cuisine",
+                optionA: "Butter Chicken",
+                optionB: "Chicken Biryani",
+                votesA: 310,
+                votesB: 450
+            },
+            {
+                id: "p3",
+                category: "Indian Culinary Cuisine",
+                optionA: "Mutton Biryani",
+                optionB: "Chicken Biryani",
+                votesA: 200,
+                votesB: 230
+            },
+            {
+                id: "p4",
+                category: "Sports Legends",
+                optionA: "Lionel Messi",
+                optionB: "Cristiano Ronaldo",
+                votesA: 850,
+                votesB: 820
+            }
+        ];
+
+        let polls = JSON.parse(localStorage.getItem('rivalry_polls')) || initialPolls;
+        let userVotes = JSON.parse(localStorage.getItem('user_voted_polls')) || {};
+
+        function saveToStorage() {
+            localStorage.setItem('rivalry_polls', JSON.stringify(polls));
+            localStorage.setItem('user_voted_polls', JSON.stringify(userVotes));
+        }
+
+        function renderPolls() {
+            const container = document.getElementById('polls-container');
+            container.innerHTML = '';
+
+            const categories = {};
+            polls.forEach(poll => {
+                if (!categories[poll.category]) {
+                    categories[poll.category] = [];
+                }
+                categories[poll.category].push(poll);
+            });
+
+            for (const [categoryName, pollList] of Object.entries(categories)) {
+                const categoryHeader = document.createElement('h2');
+                categoryHeader.className = 'category-title';
+                categoryHeader.innerText = categoryName;
+                container.appendChild(categoryHeader);
+
+                pollList.forEach(poll => {
+                    const totalVotes = poll.votesA + poll.votesB;
+                    const percentA = totalVotes === 0 ? 50 : Math.round((poll.votesA / totalVotes) * 100);
+                    const percentB = totalVotes === 0 ? 50 : 100 - percentA;
+                    const hasVoted = userVotes[poll.id] !== undefined;
+
+                    const card = document.createElement('div');
+                    card.className = 'poll-card';
+                    card.innerHTML = `
+                        <div class="poll-header">${poll.optionA} vs ${poll.optionB}</div>
+                        <div class="poll-options">
+                            <button class="option-btn" ${hasVoted ? 'disabled' : ''} onclick="castVote('${poll.id}', 'A')">
+                                <span>${poll.optionA}</span>
+                                <span>${percentA}%</span>
+                            </button>
+                            <div class="vs-badge">VS</div>
+                            <button class="option-btn" ${hasVoted ? 'disabled' : ''} onclick="castVote('${poll.id}', 'B')">
+                                <span>${poll.optionB}</span>
+                                <span>${percentB}%</span>
+                            </button>
+                        </div>
+                        <div class="progress-container">
+                            <div class="progress-bar-a" style="width: ${percentA}%"></div>
+                            <div class="progress-bar-b" style="width: ${percentB}%"></div>
+                        </div>
+                        <div class="poll-footer">
+                            <span>${poll.optionA}: ${poll.votesA} votes</span>
+                            <span>Total Votes: ${totalVotes}</span>
+                            <span>${poll.optionB}: ${poll.votesB} votes</span>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
+            }
+        }
+
+        function castVote(pollId, option) {
+            if (userVotes[pollId]) return;
+
+            const poll = polls.find(p => p.id === pollId);
+            if (!poll) return;
+
+            if (option === 'A') poll.votesA++;
+            if (option === 'B') poll.votesB++;
+
+            userVotes[pollId] = option;
+            saveToStorage();
+            renderPolls();
+        }
+
+        document.getElementById('create-poll-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const category = document.getElementById('poll-category').value;
+            const optionA = document.getElementById('option-a-input').value.trim();
+            const optionB = document.getElementById('option-b-input').value.trim();
+
+            if (!optionA || !optionB) return;
+
+            const newPoll = {
+                id: 'p_' + Date.now(),
+                category,
+                optionA,
+                optionB,
+                votesA: 0,
+                votesB: 0
+            };
+
+            polls.push(newPoll);
+            saveToStorage();
+            renderPolls();
+
+            document.getElementById('option-a-input').value = '';
+            document.getElementById('option-b-input').value = '';
+        });
+
+        renderPolls();
+    </script>
+</body>
+</html>
