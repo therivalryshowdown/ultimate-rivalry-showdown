@@ -159,6 +159,78 @@
         flex-wrap: wrap;
         font-size: 0.9rem;
         color: var(--muted);
+        margin-bottom: 12px;
+      }
+
+      .vote-details-toggle {
+        text-align: center;
+        margin-top: 12px;
+      }
+
+      .toggle-btn {
+        background: #e8f4f8;
+        border: 1px solid #b3d9e8;
+        color: #1e90ff;
+        padding: 8px 14px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 0.9rem;
+        font-weight: 600;
+      }
+
+      .toggle-btn:hover {
+        background: #d0e8f2;
+      }
+
+      .vote-details {
+        background: #f5f8fb;
+        border: 1px solid #e0e6ed;
+        border-radius: 10px;
+        padding: 12px;
+        margin-top: 12px;
+      }
+
+      .votes-list h4 {
+        margin: 0 0 10px;
+        color: #1e90ff;
+        font-size: 0.95rem;
+      }
+
+      .vote-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 10px;
+        background: white;
+        border-radius: 8px;
+        margin-bottom: 8px;
+        font-size: 0.85rem;
+        border: 1px solid #e8eef5;
+      }
+
+      .voter-name {
+        font-weight: 700;
+        color: #2f3542;
+        background: #e8f4f8;
+        padding: 2px 6px;
+        border-radius: 4px;
+      }
+
+      .vote-choice {
+        color: #465063;
+      }
+
+      .vote-time {
+        color: #747d8c;
+        font-size: 0.8rem;
+        margin-left: auto;
+      }
+
+      .no-votes {
+        color: #747d8c;
+        font-size: 0.9rem;
+        text-align: center;
+        padding: 10px;
       }
 
       .add-poll-section {
@@ -202,12 +274,40 @@
         cursor: pointer;
       }
 
-      .admin-link {
-        display: inline-block;
-        margin-top: 18px;
+      .add-category-section {
+        background: #f0f9f7;
+        border: 1px solid #d4f0ed;
+        border-radius: 12px;
+        padding: 16px;
+        margin-bottom: 18px;
+      }
+
+      .add-category-section h4 {
+        margin: 0 0 12px;
         color: #1e90ff;
-        text-decoration: none;
+      }
+
+      .category-form {
+        display: flex;
+        gap: 10px;
+      }
+
+      .category-form input {
+        flex: 1;
+      }
+
+      .category-form button {
+        background: #1e90ff;
+        border: none;
+        border-radius: 10px;
+        padding: 10px 16px;
+        color: white;
         font-weight: 700;
+        cursor: pointer;
+      }
+
+      .category-form button:hover {
+        background: #0d7aff;
       }
 
       @media (max-width: 700px) {
@@ -215,6 +315,9 @@
         .poll-options { flex-direction: column; }
         .form-group { flex-direction: column; }
         .poll-footer { flex-direction: column; }
+        .category-form { flex-direction: column; }
+        .vote-item { flex-direction: column; gap: 4px; }
+        .vote-time { margin-left: 0; }
       }
     </style>
   </head>
@@ -230,6 +333,14 @@
 
     <div class="container">
       <div class="add-poll-section">
+        <div class="add-category-section">
+          <h4>Add a New Category</h4>
+          <div class="form-group">
+            <input type="text" id="new-category-input" placeholder="Enter category name" />
+            <button id="add-category-btn" class="add-btn">Add Category</button>
+          </div>
+        </div>
+
         <h3>Create Your Own Rivalry Poll</h3>
         <form id="create-poll-form">
           <div class="form-group">
@@ -241,8 +352,6 @@
           </div>
           <button type="submit" class="add-btn">Create Poll</button>
         </form>
-
-        <a class="admin-link" href="admin.html?key=RIVALRY_ADMIN_SECRET_2026">Admin: Add Categories</a>
       </div>
     </div>
 
@@ -251,774 +360,3 @@
     <script src="app.js"></script>
   </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
